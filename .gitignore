@@ -3,6 +3,7 @@
 
 # Compiled binaries
 autodeploy
+autodeploy-*
 /bin/
 
 # OS
