@@ -26,7 +26,7 @@ func gitHead(path string) (string, error) {
 func readFolder(path string) {
 	entries, err := os.ReadDir(path)
 	if err != nil {
-		fmt.Println("Error: could not read folders from", path)
+		fmt.Println("Error: could not read folders from", path, "-", err)
 		return
 	}
 
