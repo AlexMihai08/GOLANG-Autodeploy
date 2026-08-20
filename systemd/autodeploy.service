@@ -1,0 +1,15 @@
+[Unit]
+Description=Autodeploy watcher
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=template
+ExecStart=/home/template/GOLANG-Autodeploy/autodeploy -path /home/template
+Restart=always
+RestartSec=5
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+
+[Install]
+WantedBy=multi-user.target
