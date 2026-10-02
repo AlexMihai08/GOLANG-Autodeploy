@@ -45,6 +45,24 @@ func readFolder(path string) {
 	}
 }
 
+func pruneDocker() {
+	pruneMu.Lock()
+	defer pruneMu.Unlock()
+
+	cmds := [][]string{
+		{"image", "prune", "-af", "--filter", "until=72h"},
+		{"builder", "prune", "-af", "--filter", "until=48h"},
+	}
+	for _, args := range cmds {
+		out, err := exec.Command("docker", args...).CombinedOutput()
+		if err != nil {
+			fmt.Println("Error running docker", strings.Join(args, " "), "-", err, string(out))
+			continue
+		}
+		fmt.Println(string(out))
+	}
+}
+
 func verifyFolder(path string, folderName string) {
 	cmd_dir := filepath.Join(path, folderName)
 
@@ -87,9 +105,12 @@ func verifyFolder(path string, folderName string) {
 			fmt.Println("Error running docker compose up --build -d command:", err)
 			return
 		}
+		pruneDocker()
 		fmt.Println(string(output))
 	}
 }
+
+var pruneMu sync.Mutex
 
 func main() {
 	rootPath := flag.String("path", "", "root path containing the project folders")
